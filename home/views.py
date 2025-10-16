@@ -168,7 +168,7 @@ def fetch_play_store_app(package_name):
     title_tag = soup.find('h1')
     title = title_tag.text.strip() if title_tag else package_name
     # Developer
-    dev = None
+    dev = 'Novera Labs'
     dev_tag = soup.select_one('[itemprop="author"], a.hrTbp.R8zArc')
     if dev_tag:
         dev = dev_tag.text.strip()
