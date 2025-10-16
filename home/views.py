@@ -50,8 +50,8 @@ def fetch_github_repos(username):
     if resp.status_code != 200:
         return []
     data = resp.json()
-    # Map to simple structure
-    repos = [
+    # Map to simple structure - only public repos
+    public_repos = [
         {
             'name': r.get('name'),
             'html_url': r.get('html_url'),
@@ -60,8 +60,9 @@ def fetch_github_repos(username):
             'stars': r.get('stargazers_count', 0),
         }
         for r in data
+        if not r.get('private')  # filter out private repos
     ]
-    return repos
+    return public_repos
 
 
 def index(request):
