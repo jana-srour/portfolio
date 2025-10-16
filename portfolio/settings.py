@@ -150,7 +150,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # GitHub integration: set your username to show repos on the homepage
-GITHUB_USERNAME = 'jana-srour'  # e.g. 'your-github-username'
+GITHUB_USERNAME = 'https://github.com/jana-srour'  # e.g. 'your-github-username'
 # How long to cache repo responses (seconds)
 GITHUB_CACHE_SECONDS = 300
 
