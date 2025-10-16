@@ -42,7 +42,11 @@ def fetch_github_repos(username):
     if not username:
         return []
     url = f'https://api.github.com/users/{username}/repos'
-    resp = requests.get(url, params={'per_page': 50, 'sort': 'updated'})
+    headers = {}
+    token = getattr(settings, 'GITHUB_TOKEN', None)
+    if token:
+        headers['Authorization'] = f'token {token}'
+    resp = requests.get(url, params={'per_page': 50, 'sort': 'updated'}, headers=headers)
     if resp.status_code != 200:
         return []
     data = resp.json()
