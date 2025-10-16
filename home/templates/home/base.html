@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}Portfolio{% endblock %}</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'home/style.css' %}">
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="/">Jana Srour</a>
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#projects">Work</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  {% block content %}{% endblock %}
+
+  <footer class="footer">
+    <div class="container">© {{ now|default:2025 }} Jana Srour</div>
+  </footer>
+
+  <script src="{% static 'home/circuit.js' %}"></script>
+</body>
+</html>

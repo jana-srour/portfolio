@@ -1,0 +1,313 @@
+{% extends 'home/base.html' %}
+
+{% block title %}Home — Portfolio{% endblock %}
+
+{% block content %}
+<header class="classic">
+  <div class="classic-inner">
+    <div class="classic-text">
+      <h1>Hi, I'm Jana Srour</h1>
+      <h3>Engineer | Developer | Network Specialist</h3>
+      <!--<p>I create intelligent digital experiences combining engineering precision with creative problem-solving.</p>-->
+      <div class="classic-buttons">
+        <a class="btn" href="#projects">See my work</a>
+        <a class="btn ghost" href="#contact">Contact me</a>
+      </div>
+    </div>
+    <div class="classic-avatar">
+      <div class="avatar-circle">J</div>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <section id="about" class="about">
+    <h2>About Me</h2>
+
+    <!-- Row: Education + Experience -->
+    <div class="about-card-row">
+      <!-- Education Card -->
+      <div class="about-card">
+          <h3>🎓 Education</h3>
+          {% for edu in educations %}
+          <div class="education-item">
+            <h4>{{ edu.degree }}</h4>
+            <p>{{ edu.major_institution }}</p>
+            {% if edu.notes %}<p>{{ edu.notes }}</p>{% endif %}
+            <span class="item-date">
+              {{ edu.start_date|date:"M Y" }} – {% if edu.end_date %}{{ edu.end_date|date:"M Y" }}{% else %}Present{% endif %}
+            </span>
+
+          </div>
+          {% empty %}
+            <p>No education records yet.</p>
+          {% endfor %}
+      </div>
+
+      <div class="about-card">
+        <h3>💼 Experience</h3>
+        <ul class="experience-list">
+          {% for exp in experiences %}
+            <li>
+              <strong>{{ exp.company }}</strong> – {{ exp.title }}
+              <br><span class="item-date">
+                {{ exp.start_date|date:"M Y" }} – {% if exp.end_date %}{{ exp.end_date|date:"M Y" }}{% else %}Present{% endif %}
+              </span>
+
+            </li>
+          {% empty %}
+            <li>No experience records yet.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="about-card-full">
+      <div class="about-card">
+        <h3>🛠 Skills & Tools</h3>
+        <div class="skills-grid">
+          {% for category in skill_categories %}
+            <div class="skill-category">
+              <h4>{{ category.name }}</h4>
+              <ul>
+                {% for skill in category.skills.all %}
+                  <li>{{ skill.name }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% empty %}
+            <p>No skills added yet.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="about-card-row about-grid">
+      <!-- Projects & Learning -->
+      <div class="about-card">
+        <h3>🚀 Projects & Learning</h3>
+        <!-- 🧩 Projects -->
+        <div class="projects-section">
+          <h4>Projects</h4>
+          <ul class="projects-list">
+            {% for project in projects %}
+              <li>
+                <span class="project-name">{{ project.name }}</span>
+                <div class="project-bar">
+                  {% for stage in project.stages.all %}
+                    <div class="progress-segment"
+                        data-tooltip="{{ stage.name }}"
+                        data-status="{{ stage.status }}">
+                    </div>
+                  {% endfor %}
+                </div>
+              </li>
+            {% empty %}
+              <li>No projects yet.</li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <!-- 📚 Learnings -->
+        <div class="learning-section">
+          <h4>Learnings</h4>
+          <ul class="projects-list">
+            {% for learning in learnings %}
+              <li>
+                <span class="project-name">{{ learning.name }}</span>
+                <div class="project-bar">
+                  {% for stage in learning.stages.all %}
+                    <div class="progress-segment"
+                        data-tooltip="{{ stage.name }}"
+                        data-status="{{ stage.status }}">
+                    </div>
+                  {% endfor %}
+                </div>
+              </li>
+            {% empty %}
+              <li>No learnings yet.</li>
+            {% endfor %}
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Personal Skills -->
+      <div class="about-card">
+        <h3>✨ Personal Skills</h3>
+        <ul class="personal-list">
+          {% for skill in personal_skills %}
+            <li>{{ skill.name }}</li>
+          {% empty %}
+            <li>No personal skills added yet.</li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Languages -->
+      <div class="about-card">
+        <h3>🌐 Languages</h3>
+        {% for lang in languages %}
+        <div class="language">
+          <span>{{ lang.name }}</span>
+          <div class="progress-bar" data-tooltip="{{ lang.note|default:'' }}">
+            <div class="progress" style="width: {{ lang.proficiency }}%;"></div>
+          </div>
+        </div>
+        {% empty %}
+          <p>No languages added yet.</p>
+        {% endfor %}
+
+    </div>
+
+    <!--<br><br>
+    <p class="about-tagline">
+      💡 I combine <span class="highlight">engineering expertise</span> with <span class="accent">creative problem-solving</span> to deliver 
+      <span class="highlight">high-performance networks, innovative apps, and powerful digital experiences</span>.
+    </p>-->
+  </section>
+
+
+  <section id="projects" class="projects">
+    <h2>Selected projects</h2>
+    <div class="grid">
+      {% if repos %}
+        {% for repo in repos %}
+          <article class="card">
+            <h3>{{ repo.name }}</h3>
+            <p>{{ repo.description }}</p>
+            <p class="muted">{{ repo.language }} · ★ {{ repo.stars }}</p>
+            <p><a class="link" href="{{ repo.html_url }}" target="_blank" rel="noopener">View on GitHub →</a></p>
+          </article>
+        {% endfor %}
+      {% else %}
+        <article class="card">
+          <h3>No projects configured</h3>
+          <p>Set your GitHub username in <code>settings.py</code> as <code>GITHUB_USERNAME</code>.</p>
+        </article>
+      {% endif %}
+    </div>
+  </section>
+
+  <section id="playstore" class="projects">
+    <h2>Published apps</h2>
+    <div class="grid">
+      {% if play_apps %}
+        {% for app in play_apps %}
+          <article class="card">
+            <h3>{{ app.title }}</h3>
+            <p class="muted">by {{ app.developer }}</p>
+            {% if app.icon %}
+              <img src="{{ app.icon }}" alt="{{ app.title }} icon" class="app-icon">
+            {% endif %}
+            <p><a class="link" href="{{ app.url }}" target="_blank" rel="noopener">View on Play Store →</a></p>
+          </article>
+        {% endfor %}
+      {% else %}
+        <article class="card">
+          <h3>No published apps configured</h3>
+          <p>Add Play Store package names in <code>settings.py</code> under <code>PLAY_STORE_PACKAGES</code>.</p>
+        </article>
+      {% endif %}
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <h2>Contact</h2>
+    <p>
+      Have a project, idea, or opportunity? Or want to hire me? 
+      <br>
+      You can drop a message below or contact me directly via email at <a href="mailto:jana.srour.js99@gmail.com">jana.srour.js99@gmail.com</a>. 
+      <br>
+      I’ll get back to you as soon as possible.
+    </p>
+
+    {% if messages %}
+      <ul class="messages" id="django-messages">
+        {% for message in messages %}
+          <li class="message {{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <form method="post" action="#contact">
+      {% csrf_token %}
+      <div class="form-row">
+        <div>{{ contact_form.name.label_tag }}{{ contact_form.name }}</div>
+        <div>{{ contact_form.email.label_tag }}{{ contact_form.email }}</div>
+      </div>
+      <p>{{ contact_form.subject.label_tag }}{{ contact_form.subject }}</p>
+      <p>{{ contact_form.message.label_tag }}{{ contact_form.message }}</p>
+      <p><button class="btn" type="submit">Send message</button></p>
+    </form>
+  </section>
+</main>
+<button id="back-to-top" title="Go to top">↑</button>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  const msgList = document.getElementById('django-messages');
+  if (!msgList) return;
+  setTimeout(()=>{ msgList.style.opacity='0'; setTimeout(()=>msgList.remove(),700); }, 6000);
+  msgList.addEventListener('click', ()=> msgList.remove());
+});
+
+// Tooltip functionality
+const tooltip = document.createElement('div');
+tooltip.className = 'tooltip';
+document.body.appendChild(tooltip);
+
+// Language bars (simple one tooltip)
+document.querySelectorAll('.progress-bar').forEach(bar => {
+  bar.addEventListener('mouseenter', () => {
+    tooltip.textContent = bar.dataset.tooltip;
+    tooltip.style.opacity = 1;
+  });
+  bar.addEventListener('mousemove', e => {
+    tooltip.style.left = e.clientX + 12 + 'px';
+    tooltip.style.top = e.clientY + 12 + 'px';
+  });
+  bar.addEventListener('mouseleave', () => {
+    tooltip.style.opacity = 0;
+  });
+});
+
+// Project / Learning bars (segmented tooltips)
+document.querySelectorAll('.project-bar').forEach(bar => {
+  bar.addEventListener('mousemove', e => {
+    let hovered = null;
+    [...bar.children].forEach(seg => {
+      const rect = seg.getBoundingClientRect();
+      if (e.clientX >= rect.left && e.clientX <= rect.right) hovered = seg;
+    });
+    if (hovered) {
+      tooltip.textContent = hovered.dataset.tooltip;
+      tooltip.style.opacity = 1;
+      tooltip.style.left = e.clientX + 12 + 'px';
+      tooltip.style.top = e.clientY + 12 + 'px';
+    }
+  });
+  bar.addEventListener('mouseleave', () => {
+    tooltip.style.opacity = 0;
+  });
+});
+
+const backToTop = document.getElementById('back-to-top');
+
+// Show button when scrolling down
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 300) {
+    backToTop.style.display = 'flex';
+  } else {
+    backToTop.style.display = 'none';
+  }
+});
+
+// Smooth scroll to top
+backToTop.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+</script>
+{% endblock %}
