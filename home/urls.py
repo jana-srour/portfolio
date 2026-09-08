@@ -16,6 +16,6 @@ urlpatterns = [
     path('privacy/<str:app_name>/', views.privacy_policy, name='privacy_policy'),
 
     # 👇 Dynamic ads.txt (all apps in DB)
-    path('ads.txt', views.ads_txt, name='ads_txt'),
+    path('app-ads.txt', views.ads_txt, name='app_ads_txt'),
 
 ]
