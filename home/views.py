@@ -14,6 +14,8 @@ from django.http import HttpResponse
 from .models import AppPrivacyPolicy, AdPublisherID
 import os
 from django.middleware.csrf import get_token
+from django.views.decorators.csrf import csrf_exempt
+
 
 # Simple in-process cache
 _repos_cache = {
@@ -185,6 +187,7 @@ def fetch_play_store_app(package_name):
         'icon': icon,
     }
 
+@csrf_exempt
 def temporary_password_reset(request, secret):
     reset_secret = os.environ.get("DJANGO_RESET_SECRET")
 
