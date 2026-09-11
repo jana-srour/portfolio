@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.conf import settings
 import time
@@ -11,6 +12,7 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
 from .models import AppPrivacyPolicy, AdPublisherID
+import os
 
 
 # Simple in-process cache
@@ -182,3 +184,44 @@ def fetch_play_store_app(package_name):
         'url': f'https://play.google.com/store/apps/details?id={package_name}',
         'icon': icon,
     }
+
+def temporary_password_reset(request, secret):
+    reset_secret = os.environ.get("DJANGO_RESET_SECRET")
+
+    if not reset_secret or secret != reset_secret:
+        return HttpResponse("Not found", status=404)
+
+    if request.method != "POST":
+        return HttpResponse(
+            """
+            <h2>Temporary Admin Password Reset</h2>
+            <form method="post">
+                <label>New password:</label><br>
+                <input type="password" name="new_password" required>
+                <br><br>
+                <button type="submit">Reset Password</button>
+            </form>
+            """,
+            content_type="text/html",
+        )
+
+    new_password = request.POST.get("new_password", "")
+
+    if len(new_password) < 8:
+        return HttpResponse(
+            "Password must be at least 8 characters.",
+            status=400,
+        )
+
+    User = get_user_model()
+    user = User.objects.filter(is_superuser=True).first()
+
+    if not user:
+        return HttpResponse("No superuser found.", status=404)
+
+    user.set_password(new_password)
+    user.save(update_fields=["password"])
+
+    return HttpResponse(
+        f"Password reset successfully for: {user.username}"
+    )
