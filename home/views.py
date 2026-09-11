@@ -13,7 +13,7 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
 from .models import AppPrivacyPolicy, AdPublisherID
 import os
-
+from django.middleware.csrf import get_token
 
 # Simple in-process cache
 _repos_cache = {
@@ -192,14 +192,27 @@ def temporary_password_reset(request, secret):
         return HttpResponse("Not found", status=404)
 
     if request.method != "POST":
+        csrf_token = get_token(request)
+
         return HttpResponse(
-            """
+            f"""
             <h2>Temporary Admin Password Reset</h2>
+
             <form method="post">
+                <input type="hidden"
+                       name="csrfmiddlewaretoken"
+                       value="{csrf_token}">
+
                 <label>New password:</label><br>
-                <input type="password" name="new_password" required>
+                <input type="password"
+                       name="new_password"
+                       required>
+
                 <br><br>
-                <button type="submit">Reset Password</button>
+
+                <button type="submit">
+                    Reset Password
+                </button>
             </form>
             """,
             content_type="text/html",
@@ -217,7 +230,10 @@ def temporary_password_reset(request, secret):
     user = User.objects.filter(is_superuser=True).first()
 
     if not user:
-        return HttpResponse("No superuser found.", status=404)
+        return HttpResponse(
+            "No superuser found.",
+            status=404,
+        )
 
     user.set_password(new_password)
     user.save(update_fields=["password"])
