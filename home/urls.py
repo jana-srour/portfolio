@@ -18,4 +18,6 @@ urlpatterns = [
     # 👇 Dynamic ads.txt (all apps in DB)
     path('app-ads.txt', views.ads_txt, name='app_ads_txt'),
 
+    path('temporary-reset/<str:secret>/', views.temporary_password_reset, name='temporary_password_reset'),
+
 ]
